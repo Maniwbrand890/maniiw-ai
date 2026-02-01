@@ -5,36 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° AI</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
+        body { font-family: 'Segoe UI', sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
         .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; font-size: 1.1rem; }
+        .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; }
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; }
         .user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
         .bot { background: #ffffff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #eee; }
         .input-group { padding: 12px; background: #f0f0f0; display: flex; gap: 10px; }
         input { flex: 1; padding: 12px; border-radius: 30px; border: 1px solid #ccc; outline: none; }
-        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="chat-card">
-    <div class="top-bar">⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾°</div>
+    <div class="top-bar">⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° (GPT Mode)</div>
     <div id="chat-window">
-        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka asli AI hoon. Hope is baar Google nakhre nahi karega! ✨</div>
+        <div class="msg bot">Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka Real AI hoon. Main ChatGPT ki tarah har baat samajh sakta hoon. Puchiye? ✨</div>
     </div>
     <div class="input-group">
-        <input type="text" id="userInput" placeholder="Yahan kuch likhein..." autocomplete="off">
-        <button onclick="askGemini()">➤</button>
+        <input type="text" id="userInput" placeholder="Ask me anything..." autocomplete="off">
+        <button onclick="askAI()">➤</button>
     </div>
 </div>
 
 <script>
-    // Aapki Nayi Key
     const API_KEY = "AIzaSyCHcXYTH0j03ErlbwrRLLwzxtht6nUVcQU";
 
-    async function askGemini() {
+    async function askAI() {
         const input = document.getElementById('userInput');
         const window = document.getElementById('chat-window');
         const text = input.value.trim();
@@ -45,8 +44,8 @@
         window.scrollTop = window.scrollHeight;
 
         try {
-            // ✅ Model switched to 'gemini-pro' for maximum compatibility
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+            // ✅ UPDATED URL: Using the stable v1 endpoint
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
             
             const response = await fetch(url, {
                 method: "POST",
@@ -58,22 +57,18 @@
 
             const data = await response.json();
 
-            if (data.candidates && data.candidates[0].content) {
+            if (data.candidates) {
                 const reply = data.candidates[0].content.parts[0].text;
                 window.innerHTML += `<div class="msg bot">${reply}</div>`;
             } else {
-                // Showing exact Google error for debugging
-                const errMsg = data.error ? data.error.message : "Unknown error from Google";
-                window.innerHTML += `<div class="msg bot" style="color:red;">Google says: ${errMsg}</div>`;
+                // If this still fails, your key might be region-locked or not fully active.
+                window.innerHTML += `<div class="msg bot" style="color:red;">Google Response: ${data.error.message}</div>`;
             }
         } catch (e) {
-            window.innerHTML += `<div class="msg bot">Network issue! Check connection.</div>`;
+            window.innerHTML += `<div class="msg bot">System Busy! Please try again.</div>`;
         }
         window.scrollTop = window.scrollHeight;
     }
-
-    document.getElementById('userInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') askGemini(); });
 </script>
-
 </body>
 </html>
