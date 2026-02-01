@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° AI</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
         .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; }
+        .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; font-size: 1.1rem; }
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; }
+        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
         .bot { background: #ffffff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #eee; }
         .input-group { padding: 12px; background: #f0f0f0; display: flex; gap: 10px; }
         input { flex: 1; padding: 12px; border-radius: 30px; border: 1px solid #ccc; outline: none; }
-        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -22,22 +22,31 @@
 <div class="chat-card">
     <div class="top-bar">⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾°</div>
     <div id="chat-window">
-        <div class="msg bot">Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka Real AI hoon. Insha'Allah is bar Google rasta nahi rokega! 🚀</div>
+        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka smart bot hoon. Main AI bhi hoon aur aapka dost bhi! ❤️✨</div>
     </div>
     <div class="input-group">
         <input type="text" id="userInput" placeholder="Yahan kuch likhein..." autocomplete="off">
-        <button onclick="askGemini()">➤</button>
+        <button onclick="handleChat()">➤</button>
     </div>
 </div>
 
 <script>
-    // Aapki Nayi Key: AIzaSyCHcXYTH0j03ErlbwrRLLwzxtht6nUVcQU
     const API_KEY = "AIzaSyCHcXYTH0j03ErlbwrRLLwzxtht6nUVcQU";
 
-    async function askGemini() {
+    // 🧠 Offline Brain (Jab AI kaam na kare)
+    const offlineBrain = [
+        { keys: ["hi", "hello", "salam"], response: "Wa'alaikum Assalam! Maniiw AI hazir hai. ✨" },
+        { keys: ["love", "pyar"], response: "Mohabbat toh naseeb walon ko milti hai, Maniiw bhai! ❤️" },
+        { keys: ["sad", "udaas"], response: "Udaas na hon, waqt guzar jayega. Main hoon na! 💪" },
+        { keys: ["oye", "oye"], response: "Oye nahi, tameez se baat karo! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka bot hoon. 😎🔥" },
+        { keys: ["q", "kyun"], response: "Kyunki zindagi sawalon se bhari hai! 😂" }
+    ];
+
+    async function handleChat() {
         const input = document.getElementById('userInput');
         const window = document.getElementById('chat-window');
         const text = input.value.trim();
+        const query = text.toLowerCase();
         if (!text) return;
 
         window.innerHTML += `<div class="msg user">${text}</div>`;
@@ -45,31 +54,44 @@
         window.scrollTop = window.scrollHeight;
 
         try {
-            // ✅ Trying the absolute latest endpoint with fallback
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-            
+            // 🤖 Step 1: Try Real AI (Gemini)
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: text }] }]
-                })
+                body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
             });
 
             const data = await response.json();
 
             if (data.candidates && data.candidates[0].content) {
                 const reply = data.candidates[0].content.parts[0].text;
-                window.innerHTML += `<div class="msg bot">${reply}</div>`;
+                addBotReply(reply);
             } else {
-                // Showing detailed error to find exactly why it's failing
-                window.innerHTML += `<div class="msg bot" style="color:red;">Masla: ${data.error.message}</div>`;
+                throw new Error("AI Busy"); // Trigger Offline Mode
             }
         } catch (e) {
-            window.innerHTML += `<div class="msg bot">Server Busy! Refresh karein.</div>`;
+            // 🏠 Step 2: Fallback to Offline Brain
+            let reply = "Maniiw bhai, mera AI dimaag thora thak gaya hai, par main aapke saath hoon! 😊";
+            for (let item of offlineBrain) {
+                if (item.keys.some(k => query.includes(k))) {
+                    reply = item.response;
+                    break;
+                }
+            }
+            addBotReply(reply);
         }
-        window.scrollTop = window.scrollHeight;
     }
+
+    function addBotReply(text) {
+        const window = document.getElementById('chat-window');
+        setTimeout(() => {
+            window.innerHTML += `<div class="msg bot">${text}</div>`;
+            window.scrollTop = window.scrollHeight;
+        }, 500);
+    }
+
+    document.getElementById('userInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleChat(); });
 </script>
 </body>
 </html>
