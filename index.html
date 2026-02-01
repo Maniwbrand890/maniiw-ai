@@ -22,7 +22,7 @@
 <div class="chat-card">
     <div class="top-bar">⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾°</div>
     <div id="chat-window">
-        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka asli AI hoon. Ab puchiye jo dil kare! ❤️✨</div>
+        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka asli AI hoon. Hope is baar Google nakhre nahi karega! ✨</div>
     </div>
     <div class="input-group">
         <input type="text" id="userInput" placeholder="Yahan kuch likhein..." autocomplete="off">
@@ -31,6 +31,7 @@
 </div>
 
 <script>
+    // Aapki Nayi Key
     const API_KEY = "AIzaSyCHcXYTH0j03ErlbwrRLLwzxtht6nUVcQU";
 
     async function askGemini() {
@@ -44,7 +45,8 @@
         window.scrollTop = window.scrollHeight;
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // ✅ Model switched to 'gemini-pro' for maximum compatibility
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
             
             const response = await fetch(url, {
                 method: "POST",
@@ -60,7 +62,9 @@
                 const reply = data.candidates[0].content.parts[0].text;
                 window.innerHTML += `<div class="msg bot">${reply}</div>`;
             } else {
-                window.innerHTML += `<div class="msg bot" style="color:red;">Nakhre: ${data.error ? data.error.message : "Key activating..."}</div>`;
+                // Showing exact Google error for debugging
+                const errMsg = data.error ? data.error.message : "Unknown error from Google";
+                window.innerHTML += `<div class="msg bot" style="color:red;">Google says: ${errMsg}</div>`;
             }
         } catch (e) {
             window.innerHTML += `<div class="msg bot">Network issue! Check connection.</div>`;
