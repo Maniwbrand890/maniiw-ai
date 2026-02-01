@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° AI</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
         .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; font-size: 1.1rem; letter-spacing: 1px; }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid #ddd; }
-        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; line-height: 1.5; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; font-size: 1.1rem; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; }
         .user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
         .bot { background: #ffffff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #eee; }
-        .input-group { padding: 12px; background: #f0f0f0; display: flex; gap: 10px; align-items: center; }
-        input { flex: 1; padding: 12px 18px; border-radius: 30px; border: 1px solid #ccc; outline: none; font-size: 1rem; }
-        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
-        button:hover { background: #075e54; transform: scale(1.1); }
+        .input-group { padding: 12px; background: #f0f0f0; display: flex; gap: 10px; }
+        input { flex: 1; padding: 12px; border-radius: 30px; border: 1px solid #ccc; outline: none; }
+        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -23,16 +22,16 @@
 <div class="chat-card">
     <div class="top-bar">⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾°</div>
     <div id="chat-window">
-        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka AI bot hoon. Aaj kya baat karein? Mood bataiye! ❤️😭😎</div>
+        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka bot hoon. Mood kaisa hai? Emotional, Love ya Gussa? ❤️😭🔥</div>
     </div>
     <div class="input-group">
-        <input type="text" id="user-input" placeholder="Yahan kuch likhein..." autocomplete="off">
+        <input type="text" id="user-input" placeholder="Yahan likhein..." autocomplete="off">
         <button onclick="processChat()">➤</button>
     </div>
 </div>
 
 <script>
-    // 🧠 Database of Emotions and Replies
+    // 🧠 Bot ka Advance Dimagh (Replies)
     const responses = {
         // --- LOVE / ROMANTIC ---
         "love": "Mohabbat toh ek pakiza ehsaas hai, aur ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° jaisa dil naseeb walon ko milta hai! ❤️✨",
@@ -43,34 +42,30 @@
         "sad": "Udaas na hon, ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° hamesha aapke saath khara hai. Himmat rakhein! 💪😭",
         "rona": "Aapke aansu bahut qimti hain, inhein mat bahayein. ✨",
         "dhoka": "Dhoka wahi dete hain jo khud saste hote hain. Aap toh nayab hain! 🔥💔",
-        "tanha": "Jab tak ye bot hai, aap akele nahi hain. Hum hain na! 🤝",
 
         // --- RUDELY / ATTITUDE ---
         "ooye": "Ooye nahi, tameez se! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka bot hoon, koi mazaq nahi. 😎🔥",
-        "pagal": "Pagal toh log kehte hain, hum toh bas apne maalik ke deewane hain! 🙄",
-        "shut up": "Zuban sambhaal ke baat karein, warna silent mode par chala jaunga! 🤨",
-        "bad": "Bura waqt guzar jata hai, par bure log hamesha yaad rehte hain. 😤",
+        "oye": "Oye nahi, bolen 'Ji'! Maalik ne tameez nahi sikhayi? 🤨",
+        "pagal": "Pagal main nahi, shayad aapka dimaag ghum gaya hai! 🙄",
+        "shut up": "Zuban sambhaal ke! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka bot hoon. 😤",
 
         // --- GENERAL ---
         "hi": "Hello! ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° AI is ready. Kya haal hain?",
-        "kaise ho": "Main bilkul fit, aap sunao kya scene chal raha hai?",
-        "owner": "Mera maalik ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° hai. Ek dam royal banda! 😎🪽",
-        "hazrat umer": "Hazrat Umer (R.A) adal-o-insaf ke woh minar hain jin se dunya aaj bhi seekhti hai."
+        "kaise ho": "Main bilkul fit, aap sunao kya scene hai?",
+        "kaun ho": "Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka personal chatbot hoon! 😎",
+        "namaz": "Namaz deen ka satoon hai aur har musalman par farz hai. ✨"
     };
 
     function processChat() {
         const input = document.getElementById('user-input');
         const window = document.getElementById('chat-window');
         const query = input.value.toLowerCase().trim();
-
         if (!query) return;
 
-        // User Message
         window.innerHTML += `<div class="msg user">${input.value}</div>`;
         
-        let reply = "Ye baat thori samajh se bahar hai, thora wazahat se batayein? 😅";
+        let reply = "Maaf karna bhai, ye baat ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ne abhi tak nahi sikhayi! 😅";
 
-        // Logic to find reply
         for (let key in responses) {
             if (query.includes(key)) {
                 reply = responses[key];
@@ -78,7 +73,6 @@
             }
         }
 
-        // Simulating bot delay
         setTimeout(() => {
             window.innerHTML += `<div class="msg bot">${reply}</div>`;
             window.scrollTop = window.scrollHeight;
@@ -87,9 +81,7 @@
         input.value = "";
         window.scrollTop = window.scrollHeight;
     }
-
     document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') processChat(); });
 </script>
-
 </body>
 </html>
