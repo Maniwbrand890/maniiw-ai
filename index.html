@@ -27,7 +27,7 @@
     </div>
     
     <div id="chat-box">
-        <div class="message ai-msg">Assalam-o-Alaikum! Main Maniiw ka Meta AI hoon. Poochiye jo poochna hai! 😊</div>
+        <div class="message ai-msg">Assalam-o-Alaikum! Main Maniiw ka Meta AI hoon. Main hazir hoon, puchiye! 😊</div>
     </div>
     <div id="typing"></div>
 
@@ -38,7 +38,6 @@
 </div>
 
 <script>
-    // Aapki Nayi API Key
     const API_KEY = "AIzaSyCOPkZIS65yAGtNOjtoqDJgt7xOXDYy3wo"; 
 
     async function sendMessage() {
@@ -58,24 +57,29 @@
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Tum ek Meta AI ho jise Maniiw ne banaya hai. Friendly Urdu/Hindi mix mein jawab do. Chota jawab dena. Sawal: ${text}` }] }]
+                    contents: [{ parts: [{ text: `System: Tum ek informative Meta AI ho jise Maniiw ne banaya hai. Urdu/Hindi mein jawab do. Sawal: ${text}` }] }],
+                    safetySettings: [
+                        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+                    ]
                 })
             });
 
             const data = await response.json();
             typing.innerHTML = "";
 
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
+            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
                 const reply = data.candidates[0].content.parts[0].text;
                 box.innerHTML += `<div class="message ai-msg">${reply}</div>`;
-            } else if (data.error) {
-                box.innerHTML += `<div class="message ai-msg" style="color:red;">Error: ${data.error.message}</div>`;
             } else {
-                box.innerHTML += `<div class="message ai-msg">Sorry, main abhi jawab nahi de sakta.</div>`;
+                box.innerHTML += `<div class="message ai-msg">Yaar, Google ne jawab block kar diya. Thora sawal badal kar pucho?</div>`;
+                console.log("Full Error Data:", data);
             }
         } catch (e) {
             typing.innerHTML = "";
-            box.innerHTML += `<div class="message ai-msg">Network error. Refresh karein.</div>`;
+            box.innerHTML += `<div class="message ai-msg">Net ka masla lag raha hai. Browser refresh karein!</div>`;
         }
         box.scrollTop = box.scrollHeight;
     }
