@@ -1,0 +1,17 @@
+{
+  "short_name": "ManiiwAI",
+  "name": "Maniiw Ka AI",
+  "description": "Maniiw ka banaya hua smart AI assistant.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1698/1698535.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
