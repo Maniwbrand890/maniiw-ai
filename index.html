@@ -9,12 +9,12 @@
         .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .top-bar { background: #075e54; color: white; padding: 18px; font-weight: bold; text-align: center; font-size: 1.1rem; }
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; }
+        .msg { padding: 10px 16px; border-radius: 18px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
         .bot { background: #ffffff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #eee; }
         .input-group { padding: 12px; background: #f0f0f0; display: flex; gap: 10px; }
         input { flex: 1; padding: 12px; border-radius: 30px; border: 1px solid #ccc; outline: none; }
-        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -22,55 +22,54 @@
 <div class="chat-card">
     <div class="top-bar">⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾°</div>
     <div id="chat-window">
-        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka smart bot hoon. Mood kaisa hai? ❤️😭🔥</div>
+        <div class="msg bot">Assalam-o-Alaikum! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka asli AI hoon. Ab puchiye jo dil kare! ❤️✨</div>
     </div>
     <div class="input-group">
-        <input type="text" id="user-input" placeholder="Yahan likhein..." autocomplete="off">
-        <button onclick="processChat()">➤</button>
+        <input type="text" id="userInput" placeholder="Yahan kuch likhein..." autocomplete="off">
+        <button onclick="askGemini()">➤</button>
     </div>
 </div>
 
 <script>
-    const brain = [
-        { keys: ["hi", "hello", "salam", "hey"], response: "Hello! ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° AI hazir hai. Kya haal hain?" },
-        { keys: ["love", "pyar", "ishq", "mohabat"], response: "Mohabbat toh ek pakiza ehsaas hai, aur ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° jaisa dil naseeb walon ko milta hai! ❤️✨" },
-        { keys: ["miss", "miss you", "miss u"], response: "Aapne yaad kiya aur hum hazir! Hum kahin nahi jaate. 🩷" },
-        { keys: ["sad", "udaas", "dukh", "rona"], response: "Udaas na hon, ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° hamesha aapke saath khara hai. Himmat rakhein! 💪😭" },
-        { keys: ["dhoka", "bewafa", "broken"], response: "Dhoka wahi dete hain jo khud saste hote hain. Aap toh nayab hain! 🔥💔" },
-        { keys: ["oye", "ooye", "abey", "rude", "hat"], response: "Ooye nahi, tameez se! Main ⤿♡³Mͥᴀͣɴͫı̇̄ı̇̄ 🩷🪽⤾° ka bot hoon, koi mazaq nahi. 😎🔥" },
-        { keys: ["pagal", "stupid", "idiot"], response: "Pagal main nahi, shayad aapka dimaag ghum gaya hai! 🙄" },
-        { keys: ["q", "kyun", "why"], response: "Kyunki zindagi sawalon se bhari hai, par Maniiw ke paas har jawab hai! 😎" },
-        { keys: ["lol", "haha", "hehe"], response: "Haste huay ache lagte ho, aise hi muskurate raho! 😂✨" },
-        { keys: ["bye", "allah hafiz", "chalo"], response: "Allah Hafiz! Apna khayal rakhna, phir milenge. 👋" }
-    ];
+    const API_KEY = "AIzaSyCHcXYTH0j03ErlbwrRLLwzxtht6nUVcQU";
 
-    function processChat() {
-        const input = document.getElementById('user-input');
+    async function askGemini() {
+        const input = document.getElementById('userInput');
         const window = document.getElementById('chat-window');
-        const query = input.value.toLowerCase().trim();
-        if (!query) return;
+        const text = input.value.trim();
+        if (!text) return;
 
-        window.innerHTML += `<div class="msg user">${input.value}</div>`;
-        
-        let reply = "Ye baat thori samajh se bahar hai, thora wazahat se batayein? 😅";
-
-        // Advanced matching: checks if any key is PART of the user's sentence
-        for (let item of brain) {
-            if (item.keys.some(k => query.includes(k))) {
-                reply = item.response;
-                break;
-            }
-        }
-
-        setTimeout(() => {
-            window.innerHTML += `<div class="msg bot">${reply}</div>`;
-            window.scrollTop = window.scrollHeight;
-        }, 500);
-
+        window.innerHTML += `<div class="msg user">${text}</div>`;
         input.value = "";
         window.scrollTop = window.scrollHeight;
+
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: text }] }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.candidates && data.candidates[0].content) {
+                const reply = data.candidates[0].content.parts[0].text;
+                window.innerHTML += `<div class="msg bot">${reply}</div>`;
+            } else {
+                window.innerHTML += `<div class="msg bot" style="color:red;">Nakhre: ${data.error ? data.error.message : "Key activating..."}</div>`;
+            }
+        } catch (e) {
+            window.innerHTML += `<div class="msg bot">Network issue! Check connection.</div>`;
+        }
+        window.scrollTop = window.scrollHeight;
     }
-    document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') processChat(); });
+
+    document.getElementById('userInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') askGemini(); });
 </script>
+
 </body>
 </html>
