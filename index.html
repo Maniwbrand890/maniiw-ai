@@ -9,7 +9,7 @@
         .chat-container { width: 100%; max-width: 500px; background: #efe7dd; display: flex; flex-direction: column; border: 1px solid #ccc; }
         .header { background: #008069; color: white; padding: 12px 15px; display: flex; align-items: center; gap: 12px; font-weight: bold; }
         #chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .message { padding: 9px 13px; border-radius: 8px; max-width: 80%; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .message { padding: 9px 13px; border-radius: 8px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-wrap: break-word; }
         .user-msg { background: #dcf8c6; align-self: flex-end; border-top-right-radius: 0; }
         .ai-msg { background: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
         .status-msg { font-size: 0.8rem; color: #667781; margin: 0 15px 10px; font-style: italic; }
@@ -38,7 +38,8 @@
 </div>
 
 <script>
-    const API_KEY = "AIzaSyAYhZYzcUmZrOKLUpB7Fxbc5_3c1yabdt8"; 
+    // Aapki Nayi API Key
+    const API_KEY = "AIzaSyCOPkZIS65yAGtNOjtoqDJgt7xOXDYy3wo"; 
 
     async function sendMessage() {
         const input = document.getElementById('user-input');
@@ -53,12 +54,11 @@
         typing.innerHTML = `<div class="status-msg">Maniiw AI is typing...</div>`;
 
         try {
-            // ✅ UPDATED URL & MODEL (1.5-flash standard v1)
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Tum ek Meta AI ho jise Maniiw ne banaya hai. Friendly Urdu/Hindi mix mein jawab do. Chota jawab dena. User: ${text}` }] }]
+                    contents: [{ parts: [{ text: `Tum ek Meta AI ho jise Maniiw ne banaya hai. Friendly Urdu/Hindi mix mein jawab do. Chota jawab dena. Sawal: ${text}` }] }]
                 })
             });
 
@@ -66,14 +66,16 @@
             typing.innerHTML = "";
 
             if (data.candidates && data.candidates[0].content.parts[0].text) {
-                box.innerHTML += `<div class="message ai-msg">${data.candidates[0].content.parts[0].text}</div>`;
+                const reply = data.candidates[0].content.parts[0].text;
+                box.innerHTML += `<div class="message ai-msg">${reply}</div>`;
+            } else if (data.error) {
+                box.innerHTML += `<div class="message ai-msg" style="color:red;">Error: ${data.error.message}</div>`;
             } else {
-                box.innerHTML += `<div class="message ai-msg">Main abhi thora masroof hoon, dobara try karein?</div>`;
-                console.log(data); // Debugging ke liye
+                box.innerHTML += `<div class="message ai-msg">Sorry, main abhi jawab nahi de sakta.</div>`;
             }
         } catch (e) {
             typing.innerHTML = "";
-            box.innerHTML += `<div class="message ai-msg">Net ka masla lag raha hai.</div>`;
+            box.innerHTML += `<div class="message ai-msg">Network error. Refresh karein.</div>`;
         }
         box.scrollTop = box.scrollHeight;
     }
