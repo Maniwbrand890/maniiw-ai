@@ -3,73 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maniiw AI - Final Build</title>
+    <title>Maniiw AI - Official Fix</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #d1d7db; margin: 0; display: flex; justify-content: center; height: 100vh; }
-        .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .top-bar { background: #075e54; color: white; padding: 15px; font-weight: bold; text-align: center; }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 15px; border-radius: 15px; max-width: 75%; font-size: 0.95rem; word-wrap: break-word; }
-        .user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .bot { background: #ffffff; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .input-group { padding: 10px; background: #f0f2f5; display: flex; gap: 10px; }
-        input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ccc; outline: none; }
-        button { background: #128c7e; color: white; border: none; padding: 0 20px; border-radius: 25px; cursor: pointer; }
+        body { font-family: 'Segoe UI', sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
+        .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; }
+        .header { background: #075e54; color: white; padding: 15px; font-weight: bold; text-align: center; }
+        #box { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 10px; }
+        .m { padding: 10px 15px; border-radius: 10px; max-width: 80%; font-size: 0.9rem; }
+        .u { background: #dcf8c6; align-self: flex-end; }
+        .b { background: #fff; align-self: flex-start; border: 1px solid #ccc; }
+        .input-box { padding: 10px; background: #f0f0f0; display: flex; gap: 5px; }
+        input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
+        button { background: #128c7e; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="chat-card">
-    <div class="top-bar">Maniiw AI Assistant</div>
-    <div id="chat-window">
-        <div class="msg bot">Assalam-o-Alaikum! Nayi key set ho gayi hai. Ab puchiye jo puchna hai! 😊</div>
+    <div class="header">Maniiw AI Assistant</div>
+    <div id="box">
+        <div class="m b">Assalam-o-Alaikum! Chalo bhai, ek baar phir koshish karte hain. Insha'Allah ab chalega! 🤞</div>
     </div>
-    <div class="input-group">
-        <input type="text" id="user-in" placeholder="Type a message...">
-        <button onclick="askAI()">➤</button>
+    <div class="input-box">
+        <input type="text" id="msg-in" placeholder="Likhien yahan...">
+        <button onclick="chat()">➤</button>
     </div>
 </div>
 
 <script>
-    // ✅ Aapki Nayi API Key Paste Kar Di Gayi Hai
-    const MY_KEY = "AIzaSyAuiDtAvMsH1gw3vKnke_dVSpRAWm4G3RQ"; 
+    const KEY = "AIzaSyAuiDtAvMsH1gw3vKnke_dVSpRAWm4G3RQ";
 
-    async function askAI() {
-        const inputField = document.getElementById('user-in');
-        const window = document.getElementById('chat-window');
-        const query = inputField.value.trim();
-        if (!query) return;
+    async function chat() {
+        const inp = document.getElementById('msg-in');
+        const box = document.getElementById('box');
+        const text = inp.value.trim();
+        if(!text) return;
 
-        window.innerHTML += `<div class="msg user">${query}</div>`;
-        inputField.value = "";
-        window.scrollTop = window.scrollHeight;
+        box.innerHTML += `<div class="m u">${text}</div>`;
+        inp.value = "";
+        box.scrollTop = box.scrollHeight;
 
         try {
-            const api_url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MY_KEY}`;
-            
-            const response = await fetch(api_url, {
+            // ✅ Trying the 'v1' stable endpoint with 'gemini-1.5-flash'
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: query }] }]
+                    contents: [{ parts: [{ text: text }] }]
                 })
             });
 
-            const result = await response.json();
+            const data = await response.json();
 
-            if (result.candidates && result.candidates[0].content) {
-                const answer = result.candidates[0].content.parts[0].text;
-                window.innerHTML += `<div class="msg bot">${answer}</div>`;
+            if (data.candidates && data.candidates[0].content) {
+                const reply = data.candidates[0].content.parts[0].text;
+                box.innerHTML += `<div class="m b">${reply}</div>`;
             } else {
-                window.innerHTML += `<div class="msg bot" style="color:red;">Error: ${result.error ? result.error.message : "Something went wrong"}</div>`;
+                // Agar 404 aaye toh iska matlab model name check karna parega
+                box.innerHTML += `<div class="m b" style="color:red;">Google Response: ${data.error.message}</div>`;
+                console.log("Full Debug Info:", data);
             }
-        } catch (err) {
-            window.innerHTML += `<div class="msg bot">Network issue! Check connection.</div>`;
+        } catch (e) {
+            box.innerHTML += `<div class="m b">Network Issue!</div>`;
         }
-        window.scrollTop = window.scrollHeight;
+        box.scrollTop = box.scrollHeight;
     }
-    // Enter key support
-    document.getElementById('user-in').addEventListener('keypress', (e) => { if (e.key === 'Enter') askAI(); });
 </script>
 </body>
 </html>
