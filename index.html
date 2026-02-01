@@ -3,49 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maniiw AI - Official Fix</title>
+    <title>Maniiw AI - WhatsApp Style</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #ece5dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
-        .chat-card { width: 100%; max-width: 450px; background: #fff; display: flex; flex-direction: column; }
-        .header { background: #075e54; color: white; padding: 15px; font-weight: bold; text-align: center; }
-        #box { flex: 1; padding: 20px; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 10px; }
-        .m { padding: 10px 15px; border-radius: 10px; max-width: 80%; font-size: 0.9rem; }
-        .u { background: #dcf8c6; align-self: flex-end; }
-        .b { background: #fff; align-self: flex-start; border: 1px solid #ccc; }
-        .input-box { padding: 10px; background: #f0f0f0; display: flex; gap: 5px; }
-        input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
-        button { background: #128c7e; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #efe7dd; margin: 0; display: flex; justify-content: center; height: 100vh; }
+        .chat-container { width: 100%; max-width: 450px; background: #efe7dd; display: flex; flex-direction: column; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: #075e54; color: white; padding: 15px; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
+        .msg { padding: 8px 12px; border-radius: 8px; font-size: 0.95rem; max-width: 80%; line-height: 1.4; position: relative; }
+        .user { background: #dcf8c6; align-self: flex-end; border-top-right-radius: 0; }
+        .bot { background: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
+        .input-area { background: #f0f0f0; padding: 10px; display: flex; align-items: center; gap: 10px; }
+        input { flex: 1; padding: 12px; border-radius: 25px; border: none; outline: none; font-size: 1rem; }
+        button { background: #128c7e; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-<div class="chat-card">
-    <div class="header">Maniiw AI Assistant</div>
-    <div id="box">
-        <div class="m b">Assalam-o-Alaikum! Chalo bhai, ek baar phir koshish karte hain. Insha'Allah ab chalega! 🤞</div>
+<div class="chat-container">
+    <div class="header">
+        <div style="width:35px; height:35px; background:#fff; border-radius:50%; color:#075e54; display:flex; align-items:center; justify-content:center; font-weight:bold;">M</div>
+        Maniiw Meta AI
     </div>
-    <div class="input-box">
-        <input type="text" id="msg-in" placeholder="Likhien yahan...">
-        <button onclick="chat()">➤</button>
+    <div id="chat-box">
+        <div class="msg bot">Assalam-o-Alaikum! Main Maniiw ka Meta AI hoon. Ab Insha'Allah hum baat kar sakenge. Puchiye? 😊</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Message..." autocomplete="off">
+        <button onclick="sendMessage()">➤</button>
     </div>
 </div>
 
 <script>
-    const KEY = "AIzaSyAuiDtAvMsH1gw3vKnke_dVSpRAWm4G3RQ";
+    // Aapki Key: AIzaSyAuiDtAvMsH1gw3vKnke_dVSpRAWm4G3RQ
+    const API_KEY = "AIzaSyAuiDtAvMsH1gw3vKnke_dVSpRAWm4G3RQ";
 
-    async function chat() {
-        const inp = document.getElementById('msg-in');
-        const box = document.getElementById('box');
-        const text = inp.value.trim();
-        if(!text) return;
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const box = document.getElementById('chat-box');
+        const text = input.value.trim();
+        if (!text) return;
 
-        box.innerHTML += `<div class="m u">${text}</div>`;
-        inp.value = "";
+        // User message
+        box.innerHTML += `<div class="msg user">${text}</div>`;
+        input.value = "";
         box.scrollTop = box.scrollHeight;
 
         try {
-            // ✅ Trying the 'v1' stable endpoint with 'gemini-1.5-flash'
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
+            // ✅ UPDATED URL: Using v1beta with gemini-1.5-flash
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -57,17 +62,20 @@
 
             if (data.candidates && data.candidates[0].content) {
                 const reply = data.candidates[0].content.parts[0].text;
-                box.innerHTML += `<div class="m b">${reply}</div>`;
+                box.innerHTML += `<div class="msg bot">${reply}</div>`;
             } else {
-                // Agar 404 aaye toh iska matlab model name check karna parega
-                box.innerHTML += `<div class="m b" style="color:red;">Google Response: ${data.error.message}</div>`;
-                console.log("Full Debug Info:", data);
+                // Detailed Error for debugging
+                const errorInfo = data.error ? data.error.message : "Google system is still activating your key. Please wait 5 mins.";
+                box.innerHTML += `<div class="msg bot" style="color:red;">Status: ${errorInfo}</div>`;
             }
         } catch (e) {
-            box.innerHTML += `<div class="m b">Network Issue!</div>`;
+            box.innerHTML += `<div class="msg bot">Network error. Refresh page!</div>`;
         }
         box.scrollTop = box.scrollHeight;
     }
+
+    document.getElementById('userInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
 </script>
+
 </body>
 </html>
